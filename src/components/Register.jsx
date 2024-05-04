@@ -91,7 +91,6 @@ const Register = () => {
       }, 1000);
     } catch (error) {
       console.log(error);
-      alert("Something went wrong.");
       alert(error.message);
       toast.error(error.message);
     } finally {
