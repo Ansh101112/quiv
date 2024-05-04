@@ -5,6 +5,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { NavLink, useNavigate } from "react-router-dom";
+import { FiUpload } from "react-icons/fi";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -19,15 +20,20 @@ const Register = () => {
     additionalDetails: "",
   });
   const [profilePhoto, setProfilePhoto] = useState(null); // State to store profile photo file
+  const [coverPhoto, setCoverPhoto] = useState(null); // State to store cover photo file
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = (e, photoType) => {
     const file = e.target.files[0];
-    setProfilePhoto(file);
+    if (photoType === "profile") {
+      setProfilePhoto(file);
+    } else if (photoType === "cover") {
+      setCoverPhoto(file);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -44,11 +50,20 @@ const Register = () => {
       );
       const user = userCredential.user;
 
-      const photoRef = ref(storage, `profilePhotos/${user.uid}`);
-      await uploadBytes(photoRef, profilePhoto, {
-        contentType: Image,
+      // Upload profile photo
+      const profilePhotoRef = ref(storage, `profilePhotos/${user.uid}`);
+      await uploadBytes(profilePhotoRef, profilePhoto, {
+        contentType: "image/jpeg",
       });
-      const photoURL = await getDownloadURL(photoRef);
+      const profilePhotoURL = await getDownloadURL(profilePhotoRef);
+
+      // Upload cover photo
+      const coverPhotoRef = ref(storage, `coverPhotos/${user.uid}`);
+      await uploadBytes(coverPhotoRef, coverPhoto, {
+        contentType: "image/jpeg",
+      });
+      const coverPhotoURL = await getDownloadURL(coverPhotoRef);
+
       // Store user details in Firestore
       await setDoc(doc(db, "Users", user.uid), {
         email,
@@ -57,7 +72,8 @@ const Register = () => {
         gender,
         country,
         additionalDetails,
-        profilePhoto: photoURL,
+        profilePhoto: profilePhotoURL,
+        coverPhoto: coverPhotoURL,
       });
 
       console.log("User registered Successfully.");
@@ -80,30 +96,6 @@ const Register = () => {
 
   return (
     <div className="min-h-screen bg-blue-800 flex justify-center items-center">
-      <div className="flex justify-center items-center w-full md:w-auto m-4">
-        <img
-          src="https://img.freepik.com/free-vector/privacy-policy-concept-illustration_114360-7853.jpg?w=740&t=st=1714815244~exp=1714815844~hmac=177a565d386401d3761bebb5e558323c7e26ce1162a2cb7779605586177dfe49"
-          alt="Privacy Policy"
-          className="w-72 h-auto object-cover rounded-md"
-          style={{
-            transition: "transform 0.5s ease",
-            transformStyle: "preserve-3d",
-            transform: "perspective(500px) rotateY(0deg) rotateX(0deg)",
-          }}
-          onMouseMove={(e) => {
-            const xAxis = (window.innerWidth / 2 - e.pageX) / 30;
-            const yAxis = (window.innerHeight / 2 - e.pageY) / 20;
-            e.target.style.transform = `perspective(500px) rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
-          }}
-          onMouseEnter={(e) => {
-            e.target.style.transition = "none";
-          }}
-          onMouseLeave={(e) => {
-            e.target.style.transition = "transform 0.5s ease";
-            e.target.style.transform = `perspective(500px) rotateY(0deg) rotateX(0deg)`;
-          }}
-        />
-      </div>
       <div className="max-w-md w-full p-8 bg-gray-300 rounded-md shadow-sm">
         <h2 className="text-2xl font-bold mb-4">Register Here</h2>
         <form onSubmit={handleSubmit}>
@@ -188,14 +180,33 @@ const Register = () => {
               htmlFor="profile-photo"
               className="block text-sm font-medium text-gray-700"
             >
-              Profile Photo:
+              <FiUpload className="inline-block mr-1" /> Upload Profile Photo:
             </label>
             <input
               type="file"
               id="profile-photo"
               name="profilePhoto"
               accept="image/*"
-              onChange={handleFileChange} // Call handleFileChange when a file is selected
+              onChange={(e) => handleFileChange(e, "profile")}
+              className="mt-1 px-3 py-2 block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
+              required
+            />
+          </div>
+
+          {/* Cover Photo */}
+          <div className="mb-4">
+            <label
+              htmlFor="cover-photo"
+              className="block text-sm font-medium text-gray-700"
+            >
+              <FiUpload className="inline-block mr-1" /> Upload Cover Photo:
+            </label>
+            <input
+              type="file"
+              id="cover-photo"
+              name="coverPhoto"
+              accept="image/*"
+              onChange={(e) => handleFileChange(e, "cover")}
               className="mt-1 px-3 py-2 block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
               required
             />
