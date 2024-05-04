@@ -21,6 +21,7 @@ const Register = () => {
   });
   const [profilePhoto, setProfilePhoto] = useState(null); // State to store profile photo file
   const [coverPhoto, setCoverPhoto] = useState(null); // State to store cover photo file
+  const [loading, setLoading] = useState(false); // State to track loading status
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -42,6 +43,8 @@ const Register = () => {
       formData;
 
     try {
+      setLoading(true); // Start loading
+
       // Create user with email and password
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -91,6 +94,8 @@ const Register = () => {
       alert("Something went wrong.");
       alert(error.message);
       toast.error(error.message);
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
@@ -106,6 +111,7 @@ const Register = () => {
             transformStyle: "preserve-3d",
             transform: "perspective(500px) rotateY(0deg) rotateX(0deg)",
           }}
+          j
           onMouseMove={(e) => {
             const xAxis = (window.innerWidth / 2 - e.pageX) / 30;
             const yAxis = (window.innerHeight / 2 - e.pageY) / 20;
@@ -123,6 +129,7 @@ const Register = () => {
       <div className="max-w-md w-full p-8 bg-gray-300 rounded-md shadow-sm">
         <h2 className="text-2xl font-bold mb-4">Register Here</h2>
         <form onSubmit={handleSubmit}>
+          {/* Your form inputs */}
           <div className="mb-4">
             <label
               htmlFor="name"
@@ -326,8 +333,9 @@ const Register = () => {
           <button
             type="submit"
             className="bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600"
+            disabled={loading} // Disable button when loading
           >
-            Sign Up
+            {loading ? "Loading... Please wait" : "Sign Up"}{" "}
           </button>
           <NavLink to="/" className="text-gray-700 block text-center">
             <span className="block">Already a user?</span> Login here
