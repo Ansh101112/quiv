@@ -18,7 +18,7 @@ const Dashboard = () => {
           const docSnap = await getDoc(docRef);
           if (docSnap.exists()) {
             setUserDetails(docSnap.data());
-            setQrValue(window.location.origin);
+            setQrValue("https://quivlogin.vercel.app/");
           } else {
             alert("User data not found");
             auth.signOut();
