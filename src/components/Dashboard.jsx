@@ -18,7 +18,7 @@ const Dashboard = () => {
           const docSnap = await getDoc(docRef);
           if (docSnap.exists()) {
             setUserDetails(docSnap.data());
-            setQrValue(window.location.origin + "/dashboard/"); // Set UID as QR code value
+            setQrValue(window.location.origin);
           } else {
             alert("User data not found");
             auth.signOut();
