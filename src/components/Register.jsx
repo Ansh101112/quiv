@@ -80,6 +80,30 @@ const Register = () => {
 
   return (
     <div className="min-h-screen bg-blue-800 flex justify-center items-center">
+      <div className="flex justify-center items-center w-full md:w-auto m-4">
+        <img
+          src="https://img.freepik.com/free-vector/privacy-policy-concept-illustration_114360-7853.jpg?w=740&t=st=1714815244~exp=1714815844~hmac=177a565d386401d3761bebb5e558323c7e26ce1162a2cb7779605586177dfe49"
+          alt="Privacy Policy"
+          className="w-72 h-auto object-cover rounded-md"
+          style={{
+            transition: "transform 0.5s ease",
+            transformStyle: "preserve-3d",
+            transform: "perspective(500px) rotateY(0deg) rotateX(0deg)",
+          }}
+          onMouseMove={(e) => {
+            const xAxis = (window.innerWidth / 2 - e.pageX) / 30;
+            const yAxis = (window.innerHeight / 2 - e.pageY) / 20;
+            e.target.style.transform = `perspective(500px) rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.transition = "none";
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.transition = "transform 0.5s ease";
+            e.target.style.transform = `perspective(500px) rotateY(0deg) rotateX(0deg)`;
+          }}
+        />
+      </div>
       <div className="max-w-md w-full p-8 bg-gray-300 rounded-md shadow-sm">
         <h2 className="text-2xl font-bold mb-4">Register Here</h2>
         <form onSubmit={handleSubmit}>
