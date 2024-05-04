@@ -100,7 +100,7 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen bg-blue-800 flex justify-center items-center">
+    <div className=" min-h-screen bg-blue-800 flex justify-center items-center">
       <div className="flex justify-center items-center w-full md:w-auto m-4">
         <img
           src="https://img.freepik.com/free-vector/privacy-policy-concept-illustration_114360-7853.jpg?w=740&t=st=1714815244~exp=1714815844~hmac=177a565d386401d3761bebb5e558323c7e26ce1162a2cb7779605586177dfe49"
@@ -126,7 +126,7 @@ const Register = () => {
           }}
         />
       </div>
-      <div className="max-w-md w-full p-8 bg-gray-300 rounded-md shadow-sm">
+      <div className="max-w-md w-full p-5 m-6 bg-gray-300 rounded-md shadow-sm">
         <h2 className="text-2xl font-bold mb-4">Register Here</h2>
         <form onSubmit={handleSubmit}>
           {/* Your form inputs */}
